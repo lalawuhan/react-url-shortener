@@ -78,7 +78,7 @@ function App() {
           Previous <span className="list-emphasis">Links</span>
         </h3>
       </div>
-      <ul>
+      <ul className="list-container">
         {data.map((link) => (
           <div key={link.id}>
             <p className="list-subheading">{link.url}</p>
