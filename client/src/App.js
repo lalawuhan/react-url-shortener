@@ -34,10 +34,9 @@ function App() {
   };
   const handleLink = (id) => {
     console.log("id", id);
-    axios.get(`/links/${id}/`).then(() => {
-      console.log("get data");
-
-      console.log("finished");
+    axios.get(`/links/${id}/`).then((res) => {
+      let fetchedUrl = res.request.responseURL;
+      window.location = fetchedUrl;
     });
   };
   const handleRemove = (id) => {
@@ -51,8 +50,8 @@ function App() {
   };
 
   const copyLink = (e) => {
-    console.log("event copy:", e);
-    navigator.clipboard.writeText("id: ${e}");
+    console.log("event copy id:", e);
+    navigator.clipboard.writeText(`${window.location.href}${e}`);
   };
   console.log("data", data);
   return (
