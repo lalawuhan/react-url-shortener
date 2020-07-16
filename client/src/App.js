@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import "./index.css";
 
 function App() {
   //TODO: list element show the real shortened urls, add copy function, add styling
@@ -56,25 +57,31 @@ function App() {
   console.log("data", data);
   return (
     <div>
-      {message ? <p>{message}</p> : ""}
-      <form onSubmit={handleSubmit}>
-        <h3>Submit a url</h3>
-        <label>
+      <div className="formcontainer">
+        {message ? <p className="message">{message}</p> : ""}
+        <form onSubmit={handleSubmit}>
+          <h2>URL shortener</h2>
+          <label className="formcontainer_label"> Url </label>
           <input
             name="url"
             type="url"
             value={url}
+            placeholder="E.g. www.google.com "
             onChange={(e) => setUrl(e.target.value)}
             required
           />
-        </label>
-        <button>Submit</button>
-      </form>
-      <h3>Available links</h3>
+          <button className="formcontainer_submit">Submit</button>
+        </form>
+      </div>
+      <div className="list-heading">
+        <h3>
+          Previous <span className="list-emphasis">Links</span>
+        </h3>
+      </div>
       <ul>
         {data.map((link) => (
           <div key={link.id}>
-            <p>{link.url}</p>
+            <p className="list-subheading">{link.url}</p>
             <button type="button" onClick={(e) => handleLink(link.id)}>
               Go to Link
             </button>
