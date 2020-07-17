@@ -100,3 +100,6 @@ button:hover {
   background-color: rgb(100, 21, 255);
   color: #fff;
 }
+.update-input {
+  width: 30%;
+}
