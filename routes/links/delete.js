@@ -1,14 +1,16 @@
 const renderList = require("../../templates/renderList");
-const generateID = require("../../lib/generateNum");
 const accepts = require("../../lib/accepts");
 let { data } = require("../../data/data");
+const fs = require("fs");
 
 module.exports = (req, res) => {
   let id = req.params.id;
   let link = data.find((link) => link.id === id);
   if (link) {
     let linkData = link;
-    data = data.filter((link) => link.id != req.params.id);
+    let filteredData = data.filter((link) => link.id != req.params.id);
+    data = filteredData;
+
     if (accepts(req) === "json") {
       res.writeHead(200, {
         "Content-Type": "application/json",
@@ -19,6 +21,7 @@ module.exports = (req, res) => {
           links: data,
         })
       );
+      fs.writeFileSync("data/links.json", JSON.stringify(data));
     } else {
       res.writeHead(200, {
         "Content-Type": "text/html",
@@ -38,4 +41,4 @@ module.exports = (req, res) => {
       })
     );
   }
-}
+};

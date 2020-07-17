@@ -24,8 +24,6 @@ app.use(bodyParser.json());
 app.use(serveStatic(path.join(__dirname, "client/build")));
 app.use(cors);
 
-// app.use("/api", links);
-
 app.get("/", home);
 
 app.get("/links", home);
