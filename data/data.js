@@ -1,8 +1,10 @@
 const fs = require("fs");
+const path = require("path");
 
-let data;
+let data = [];
 try {
-  data = JSON.parse(fs.readFileSync("data/links.json"));
+  const linksFilePath = path.join(__dirname, "./links.json");
+  data = JSON.parse(fs.readFileSync(linksFilePath, "utf8"));
 } catch (err) {
   if (err.code === "ENOENT") {
     const err = new Error("File does not exist.");
