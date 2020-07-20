@@ -1,73 +1,96 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
 import "./index.css";
 
 function App() {
   //TODO: list element show the real shortened urls, add copy function, add styling
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [isError, setIsError] = useState(false);
+  const [isError, setIsError] = useState(null);
   const [url, setUrl] = useState("");
   const [message, setMessage] = React.useState("");
 
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
-      setIsError(false);
       try {
-        const response = await axios.get("/links");
-        setData(response.data.links);
+        await fetch("/links", {
+          headers: {
+            "Content-Type": "application/json",
+            Accept: "application/json",
+          },
+        })
+          .then((res) => res.json())
+          .then((data) => {
+            setData(data.links);
+          });
       } catch (error) {
-        setIsError(true);
+        setIsError(error);
       }
       setLoading(false);
     };
-
     fetchData();
   }, []);
 
   const handleSubmit = (e) => {
-    console.log(`
-    submit happening
-    url: ${url}`);
+    console.log(`submit happening,  ${url}`);
     e.preventDefault();
-    console.log("need to post", url);
-    axios({
-      method: "POST",
-      url: "/links",
-      data: { url: url },
-    }).then(({ data }) => {
-      setData(data.links);
-      setMessage(data.message);
-    });
+    setLoading(true);
+    try {
+      fetch("/links", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+        body: JSON.stringify({ url: url }),
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          console.log(data);
+          setData(data.links);
+          setMessage(data.message);
+        });
+    } catch (error) {
+      setIsError(error);
+    }
+    setLoading(false);
   };
   const handleLink = (id) => {
-    console.log("id", id);
-    axios.get(`/links/${id}/`).then((res) => {
-      let fetchedUrl = res.request.responseURL;
-      window.location = fetchedUrl;
-    });
+    setLoading(true);
+    try {
+      fetch(`/links/${id}/`, { method: "GET", redirect: "follow" }).then(
+        (res) => {
+          console.log(res);
+          if (res.redirected) {
+            window.location.href = res.url;
+          }
+        }
+      );
+    } catch (error) {
+      setIsError(error);
+    }
+    setLoading(false);
   };
   const handleRemove = async (id) => {
-    console.log("id", id);
-    /* store the current state in prevLinks, just in case of server side fail */
     const prevLinks = data;
-    /* update on browser side, */
-    const updatedLinks = data.filter((x) => x.id !== id);
-    console.log("Updated links", updatedLinks);
-    /* server side update.  If it fails, rollback the state */
     try {
-      await axios.delete(`/links/${id}`);
-      setData(updatedLinks);
-    } catch (e) {
-      console.log("error", e);
+      await fetch(`/links/${id}`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          console.log("deleteddata", data);
+          setData(data.links);
+          setMessage(data.message);
+        });
+    } catch (error) {
+      setIsError(error);
       setData(prevLinks);
     }
-    // axios.delete(`/links/${id}`).then(({ data }) => {
-    //   console.log("finished delete", data);
-    //   setData(data.links);
-    //   setMessage(data.message);
-    // });
   };
   const copyLink = (e) => {
     console.log("event copy id:", e);
@@ -80,27 +103,36 @@ function App() {
     update happening, id: ${id}
     url: ${url}`);
     console.log("need to post", url);
-    axios({
-      method: "PUT",
-      url: `/links/${id}`,
-      data: { url: url },
-    }).then(({ data }) => {
-      console.log("new", data);
-      setData(data.links);
-      setMessage(data.message);
-    });
+    setLoading(true);
+    try {
+      fetch(`/links/${id}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+        body: JSON.stringify({ url: url }),
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          console.log(data);
+          setData(data.links);
+          setMessage(data.message);
+        });
+    } catch (error) {
+      setIsError(error);
+    }
+    setLoading(false);
   };
 
   return (
     <>
       {isError && <div>Something went wrong ...</div>}
-
       {loading ? (
         <p>Loading ...</p>
       ) : (
         <div>
           <div className="formcontainer">
-            {message ? <p className="message">{message}</p> : ""}
             <form onSubmit={handleSubmit}>
               <h2>URL shortener</h2>
               <label className="formcontainer_label"> Url </label>
@@ -114,6 +146,7 @@ function App() {
               />
               <button className="formcontainer_submit">Submit</button>
             </form>
+            {message ? <p className="message">{message}</p> : ""}
           </div>
           <div className="list-heading">
             <h3>
