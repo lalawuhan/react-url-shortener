@@ -6,7 +6,7 @@ const links = require("./routes/links");
 let { data } = require("./data/data");
 const path = require("path");
 const serveStatic = require("serve-static");
-const cors = require("cors")({ origin: true });
+const cors = require("cors");
 
 const port = process.env.PORT || 5000;
 const dataPath = "./data/links.json";
@@ -19,10 +19,11 @@ const app = polka({
   },
 });
 
-app.use(bodyParser.urlencoded({ extended: false }));
-app.use(bodyParser.json());
 app.use(serveStatic(path.join(__dirname, "client/build")));
-app.use(cors);
+app.use(cors());
+
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
 
 app.get("/", home);
 
