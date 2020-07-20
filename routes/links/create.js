@@ -12,21 +12,31 @@ module.exports = (req, res) => {
       })
     );
   } else {
-    let body = req.body.url;
-    let newLink = {
-      id: generateID(data),
-      url: body,
-    };
-    data.push(newLink);
-    res.writeHead(200, {
-      "Content-Type": "application/json",
-    });
-    res.end(
-      JSON.stringify({
-        status: res.statusCode,
-        message: `Link successfully added`,
-        links: data,
-      })
-    );
+    try {
+      let body = req.body.url;
+      let newLink = {
+        id: generateID(data),
+        url: body,
+      };
+      data.push(newLink);
+      res.writeHead(200, {
+        "Content-Type": "application/json",
+      });
+      res.end(
+        JSON.stringify({
+          status: res.statusCode,
+          message: `Link successfully added`,
+          links: data,
+        })
+      );
+    } catch (error) {
+      res.statusCode = 404;
+      res.end(
+        JSON.stringify({
+          status: 404,
+          message: `Cannot add link, ${error}`,
+        })
+      );
+    }
   }
 };
