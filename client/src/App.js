@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import "./index.css";
-import Form from "./components/Form";
+import LinkForm from "./components/LinkForm";
+import UpdateLinkForm from "./components/UpdateLinkForm";
 import Button from "./components/Button";
 import { useFetchAPI } from "./components/useFetchAPI";
 
@@ -21,8 +22,10 @@ function App() {
   });
 
   const handleSubmit = (e) => {
+    const formData = new FormData(e.target);
+    const url = formData.get("url");
+
     //TODO: url depends on order, replace with better data fetching
-    const url = e.target[0].value;
     e.preventDefault();
     fetch("/links", {
       method: "POST",
@@ -102,8 +105,8 @@ function App() {
         <div>
           <div className="formcontainer">
             <h2>URL shortener</h2>
-            <Form
-              type="url"
+
+            <LinkForm
               placeholder="E.g. www.google.com "
               onSubmit={(e) => handleSubmit(e)}
               name="url"
@@ -121,8 +124,8 @@ function App() {
                 <p className="list-subheading">
                   {window.location.host}/links/{link.id}
                 </p>
-                <Form
-                  type="url"
+
+                <UpdateLinkForm
                   placeholder="Update Link"
                   onSubmit={(e) => handleUpdate(link.id, e)}
                 />
