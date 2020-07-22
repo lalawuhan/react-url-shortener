@@ -68,7 +68,13 @@ function App() {
     }
   };
   const copyLink = (e) => {
-    navigator.clipboard.writeText(`${window.location.href}${e}`);
+    try {
+      navigator.clipboard.writeText(`${window.location.host}/links/${e}`);
+    } catch (err) {
+      console.warn("Failed to copy", err);
+      setIsError(err);
+      setMessage("Failed to copy");
+    }
   };
 
   const handleUpdate = (id, e) => {
