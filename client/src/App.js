@@ -104,26 +104,27 @@ function App() {
 
   return (
     <>
-      {isError && <div>Something went wrong...</div>}
-      {isLoading ? (
-        <p>Loading... </p>
-      ) : (
-        <div>
-          <div className="formcontainer">
-            <h2>URL shortener</h2>
+      <div>
+        <div className="formcontainer">
+          <h2>URL shortener</h2>
 
-            <LinkForm
-              placeholder="E.g. www.google.com "
-              onSubmit={(e) => handleSubmit(e)}
-              name="url"
-            />
-            {message ? <p className="message">{message}</p> : ""}
-          </div>
-          <div className="list-heading">
-            <h3>
-              Previous <span className="list-emphasis">Links</span>
-            </h3>
-          </div>
+          <LinkForm
+            placeholder="E.g. www.google.com "
+            onSubmit={(e) => handleSubmit(e)}
+            name="url"
+          />
+          {message ? <p className="message">{message}</p> : ""}
+        </div>
+        {isError && <div>Something went wrong...</div>}
+
+        <div className="list-heading">
+          <h3>
+            Previous <span className="list-emphasis">Links</span>
+          </h3>
+        </div>
+        {isLoading ? (
+          <p>Loading... </p>
+        ) : (
           <ul className="list-container">
             {data.map((link) => (
               <div key={link.id}>
@@ -159,8 +160,8 @@ function App() {
               </div>
             ))}
           </ul>
-        </div>
-      )}
+        )}
+      </div>
     </>
   );
 }
