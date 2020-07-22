@@ -4,7 +4,7 @@ import Button from "./Button";
 export default function LinkForm({ name, placeholder, onSubmit }) {
   return (
     <form onSubmit={onSubmit}>
-      <label for={name} className="formcontainer_label">
+      <label htmlFor={name} className="formcontainer_label">
         {" "}
         {name}{" "}
       </label>
