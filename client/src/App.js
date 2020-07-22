@@ -43,21 +43,6 @@ function App() {
       });
   };
 
-  const handleLink = (id) => {
-    setIsLoading(true);
-    fetch(`/links/${id}/`, { method: "GET", redirect: "follow" })
-      .then((res) => {
-        if (res.redirected) {
-          window.location.href = res.url;
-        }
-      })
-      .catch((err) => {
-        setIsError(err);
-        setMessage("Error redirecting");
-        console.warn("Error redirecting", err);
-      });
-  };
-
   const handleRemove = async (id) => {
     const prevLinks = data;
     try {
@@ -141,19 +126,25 @@ function App() {
                   placeholder="Update Link"
                   onSubmit={(e) => handleUpdate(link.id, e)}
                 />
-                <Button
-                  name="Go to link"
-                  type="button"
-                  handleClick={() => handleLink(link.id)}
-                />
+
+                <a
+                  href={link.url}
+                  target="_blank"
+                  rel="noreferrer noopener"
+                  className="list-button"
+                >
+                  Go to link
+                </a>
                 <Button
                   name="Copy"
                   type="button"
+                  className="list-button"
                   handleClick={() => copyLink(link.id)}
                 />
                 <Button
                   name="Delete"
                   type="button"
+                  className="list-button"
                   handleClick={() => handleRemove(link.id)}
                 />
               </div>

@@ -76,6 +76,29 @@ input ::after ::before {
   color: rgb(42, 43, 44);
   padding: 0 1.5rem;
 }
+a:link {
+  text-decoration: none;
+}
+.list-button {
+  display: inline-block;
+  border: none;
+  padding: 1rem 2rem;
+  margin: 0;
+  text-decoration: none;
+  background-color: rgb(237, 242, 247);
+  color: rgb(113, 128, 150);
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
+  padding-top: 0.75rem;
+  padding-bottom: 0.75rem;
+  font-weight: 700;
+  font-size: 1em;
+  cursor: pointer;
+  text-align: center;
+  transition: 0.3s;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+}
 button {
   display: inline-block;
   border: none;
