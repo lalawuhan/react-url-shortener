@@ -9,8 +9,9 @@ export const useFetchAPI = (url, options) => {
       setIsLoading(true);
       try {
         const res = await fetch(url, options);
+        console.log("res", res);
         const json = await res.json();
-        console.log("json", json);
+        console.log("json:", json);
         setData(json.links);
         setIsLoading(false);
       } catch (error) {
