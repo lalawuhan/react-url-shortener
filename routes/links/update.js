@@ -1,8 +1,7 @@
-let { data } = require("../../data/data");
-
+const getData = require("../../data/data");
 module.exports = (req, res) => {
   const id = req.params.id;
-  let link = data.find((link) => link.id === id);
+  let link = getData().find((link) => link.id === id);
   if (link) {
     let body = req.body;
     let newLink = body.url;
@@ -14,7 +13,7 @@ module.exports = (req, res) => {
     res.end(
       JSON.stringify({
         message: `${prevLink} successfully updated to ${newLink}.`,
-        links: data,
+        links: getData(),
       })
     );
   } else {

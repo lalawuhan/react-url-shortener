@@ -1,12 +1,15 @@
-let { data } = require("../../data/data");
+const getData = require("../../data/data");
 const fs = require("fs");
+const dataPath = "data/links.json";
 
 module.exports = (req, res) => {
   let id = req.params.id;
-  let link = data.find((link) => link.id === id);
+  let link = getData().find((link) => link.id === id);
+  let data = getData();
   if (link) {
     let linkData = link;
-    let filteredData = data.filter((link) => link.id != req.params.id);
+    let filteredData = getData().filter((link) => link.id !== req.params.id);
+    console.log("filtrt", filteredData);
     data = filteredData;
     res.writeHead(200, {
       "Content-Type": "application/json",
@@ -15,17 +18,17 @@ module.exports = (req, res) => {
       JSON.stringify({
         status: 200,
         message: `${linkData.url} with id: ${linkData.id} deleted successfully.`,
-        links: data,
+        links: filteredData,
       })
     );
-    fs.writeFileSync("data/links.json", JSON.stringify(data));
+    fs.writeFileSync(dataPath, JSON.stringify(filteredData));
   } else {
     res.statusCode = 404;
     res.end(
       JSON.stringify({
         status: 404,
         message: "Cannot delete link",
-        links: data,
+        links: getData(),
       })
     );
   }

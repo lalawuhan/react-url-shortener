@@ -1,8 +1,8 @@
-let { data } = require("../../data/data");
+const getData = require("../../data/data");
 
 module.exports = (req, res) => {
   const id = req.params.id;
-  let link = data.find((link) => link.id === id);
+  let link = getData().find((link) => link.id === id);
   if (link) {
     res.setHeader("Content-Type", "application/json");
     res.writeHead(301, {

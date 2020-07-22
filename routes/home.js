@@ -1,4 +1,4 @@
-let { data } = require("../data/data");
+const getData = require("../data/data");
 
 module.exports = (req, res) => {
   res.writeHead(200, {
@@ -6,7 +6,7 @@ module.exports = (req, res) => {
   });
   res.end(
     JSON.stringify({
-      links: data,
+      links: getData(),
     })
   );
 };

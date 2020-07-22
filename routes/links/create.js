@@ -1,5 +1,6 @@
 const generateID = require("../../lib/generateNum");
-let { data } = require("../../data/data");
+const getData = require("../../data/data");
+const fs = require("fs");
 
 module.exports = (req, res) => {
   if (req.headers["content-length"] === "0") {
@@ -15,10 +16,12 @@ module.exports = (req, res) => {
     try {
       let body = req.body.url;
       let newLink = {
-        id: generateID(data),
+        id: generateID(getData()),
         url: body,
       };
+      let data = getData();
       data.push(newLink);
+      fs.writeFileSync("data/links.json", JSON.stringify(data));
       res.writeHead(200, {
         "Content-Type": "application/json",
       });
@@ -26,7 +29,7 @@ module.exports = (req, res) => {
         JSON.stringify({
           status: res.statusCode,
           message: `Link successfully added`,
-          links: data,
+          links: getData(),
         })
       );
     } catch (error) {
