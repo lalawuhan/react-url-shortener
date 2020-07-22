@@ -3,13 +3,14 @@ const polka = require("polka");
 const bodyParser = require("body-parser");
 const home = require("./routes/home");
 const links = require("./routes/links");
-let { data } = require("./data/data");
+const getData = require("./data/data");
+
 const path = require("path");
 const serveStatic = require("serve-static");
 const cors = require("cors");
 
 const port = process.env.PORT || 5000;
-const dataPath = "./data/links.json";
+let dataPath = "./data/links.json";
 
 const app = polka({
   onError(err, req, res, next) {
@@ -46,9 +47,9 @@ app.listen(port, (err) => {
 
 //exit events
 function saveFile() {
-  console.log("data successfully saveFiled");
-
-  fs.writeFileSync(dataPath, JSON.stringify(data));
+  let latestData = getData();
+  fs.writeFileSync(dataPath, JSON.stringify(latestData));
+  console.log("data successfully saved:", latestData);
 }
 
 //catches ctrl+c event
