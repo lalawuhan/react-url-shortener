@@ -3,70 +3,38 @@ import "./index.css";
 import LinkForm from "./components/LinkForm";
 import UpdateLinkForm from "./components/UpdateLinkForm";
 import Button from "./components/Button";
-import { useFetchAPI } from "./components/useFetchAPI";
+import { useLinksAPI } from "./components/useLinksAPI";
 
 function App() {
-  const [message, setMessage] = useState("");
   const {
-    setData,
-    setIsError,
-    setIsLoading,
     data,
+    setIsError,
+    setMessage,
     isError,
     isLoading,
-  } = useFetchAPI("/links", {
-    headers: {
-      "Content-Type": "application/json",
-      Accept: "application/json",
-    },
-  });
+    message,
+    create,
+    update,
+    deleteLink,
+  } = useLinksAPI();
 
   const handleSubmit = (e) => {
     const formData = new FormData(e.target);
     const url = formData.get("url");
+    create(url);
+  };
 
-    //TODO: url depends on order, replace with better data fetching
+  const handleUpdate = (id, e) => {
     e.preventDefault();
-    fetch("/links", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Accept: "application/json",
-      },
-      body: JSON.stringify({ url: url }),
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        setData(data.links);
-        setMessage(data.message);
-      })
-      .catch((err) => {
-        setIsError(err);
-        console.warn("Cannot upload", err);
-      });
+    const formData = new FormData(e.target);
+    const url = formData.get("url");
+    update(id, url);
   };
 
   const handleRemove = async (id) => {
-    const prevLinks = data;
-    try {
-      await fetch(`/links/${id}`, {
-        method: "DELETE",
-        headers: {
-          "Content-Type": "application/json",
-          Accept: "application/json",
-        },
-      })
-        .then((res) => res.json())
-        .then((data) => {
-          setData(data.links);
-          setMessage(data.message);
-        });
-    } catch (err) {
-      console.warn("Error deleting", err);
-      setIsError(err);
-      setData(prevLinks);
-    }
+    deleteLink(id);
   };
+
   const copyLink = (e) => {
     try {
       navigator.clipboard.writeText(`${window.location.host}/links/${e}`);
@@ -77,37 +45,11 @@ function App() {
     }
   };
 
-  const handleUpdate = (id, e) => {
-    e.preventDefault();
-    const url = e.target[0].value;
-    setIsLoading(true);
-    fetch(`/links/${id}`, {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-        Accept: "application/json",
-      },
-      body: JSON.stringify({ url: url }),
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        setData(data.links);
-        setMessage(data.message);
-      })
-      .catch((err) => {
-        setIsError(err);
-        console.warn("Cannot update link", err);
-      });
-
-    setIsLoading(false);
-  };
-
   return (
     <>
       <div>
         <div className="formcontainer">
           <h2>URL shortener</h2>
-
           <LinkForm
             placeholder="E.g. www.google.com "
             onSubmit={(e) => handleSubmit(e)}
